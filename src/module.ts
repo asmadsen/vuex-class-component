@@ -231,3 +231,24 @@ function handleSubModule(target: typeof VuexModule, stateField: string, stateVal
     target.prototype[_submodule][stateField] = stateValue.store;
   }
 }
+
+export class VuexClass extends VuexModule {
+
+  static ExtractVuexOptions() {
+    return {
+      namespaced: (this.prototype[_namespacedPath] || '').length > 0,
+      state: {...this.prototype[_state]}
+    }
+  }
+}
+
+export function extractVuexOptions<T extends typeof VuexClass>(cls: T) {
+  const prototype = cls.prototype as any
+  const cacheKey = '__cache__options__'
+  if (prototype[cacheKey] == undefined) {
+    prototype //?
+    prototype[cacheKey] = {}
+  }
+
+  return prototype[cacheKey]
+}
